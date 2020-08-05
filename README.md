@@ -1,4 +1,4 @@
-**Concurrent Systems:**  
+### Concurrent Systems:  
 **Processes and Threads:**  
 Process is an instance of a program or an application. Process contains the image of the application code, memory and some other resources. An OS can run multiple process at a same time. This is called concurrency at the process level. Each process have their own memory space. We can also have concurrency within the process by using Threads. 
 Thread is sequence of instructions. Basically our codes are executed by Threads. Each process will have atleast one thread. In Java this one thread is called as main thread. We can create additional threads to run many Tasks concurrently. Applications that are using multiple threads then its called as MultiThreading. A thread cannot exist without process. All threads under a single process can share memory space between them. Threads can communicate with other threads of the same process.  
