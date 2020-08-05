@@ -1,16 +1,19 @@
-package com.codeconfessions.racecondition;
+package com.codeconfessions.synchronization;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreadDemo {
+public class ThreadDemoSynchronization {
 
     public static void main(String[] args) {
-        raceConditionSimulation();
+        synchronizationDemo();
     }
 
-    //Simulating Race Condition
-    private static void raceConditionSimulation() {
+    private static void synchronizationDemo() {
+        LocalDateTime start = LocalDateTime.now();
+        System.out.println(start);
         DownloadStatus status = new DownloadStatus();
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -25,6 +28,8 @@ public class ThreadDemo {
                 e.printStackTrace();
             }
         }
+        System.out.println(Duration.between(start, LocalDateTime.now()).toMillis());
         System.out.println("Total Bytes Downloaded:"+status.getTotalBytes());
+        System.out.println("Total Files Downloaded:"+status.getTotalFiles());
     }
 }

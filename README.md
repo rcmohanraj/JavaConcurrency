@@ -78,6 +78,8 @@ If multiple threads access the same object and while changing that common object
 Multiple threads try to modify the same data at same time.This will cause data inconsistent.  
 **2) Visibility Problem:**  
 If multiple threads access the same data and atleast one of them tries to change the data and this changes not visible to other threads.
+Each CPU will have its own small sized Cache to store the values temporarily after fetching from the memory. JVM uses this CPU cache to avoid constant fetch to the memory (RAM). When
+two different CPU threads are requesting a value from memory, each thread will store the current value to the respective CPU cache. Once the value calculation finished, the thread will update back to the memory. If the CPU1 thread updates the current value and CPU2 thread will still refer the old value from the cache. So CPU1 thread changed the value in memory but its not visible to the CPU2 thread. This called as visibility problem.
 
 ```
 private static void raceConditionSimulation() {
@@ -122,4 +124,80 @@ totalBytes++;
 3) Synchronization => Prevent the threads from accessing the same objects concurrently. We need to coordinate the access to an object across different threads. This can be achieved via Locks. This can cause deadlock where two threads waiting each other to complete.  
 4) Atomic Objects => We can use Atomic Classes in Java, which is Thread safe. If we increment an Atomic integer, JVM will execute the increment in one single operation.
 5) Partitioning => Multiple threads can access collection objects but only one thread can access the segment of Collection.
+
+**1) Confinement:**  
+Creating individual Task object for every thread and combining them once all the threads are finished. Refer ThreadDemoConfinement class.
+
+**2) Synchronization:**  
+**a) Using Lock Interface:**  
+We can use any Lock implementation in the DownloadStatus class and add lock before the increment totalBytes and unlock after increment.
+
+```
+private Lock lock = new ReentrantLock();
+
+public void incrementTotalBytes() {
+	lock.lock();
+	try {
+		totalBytes++;
+	} finally { //best way to release a lock incase of any exception also the lock will be released
+		lock.unlock();
+	}
+}
+```
+	
+**b) Using Synchronized Keyword in Method level:**  
+We can specify synchronized keyword in the incrementTotalBytes method so that only one thread at a time can update the value.
+
+```
+public synchronized void incrementTotalBytes() {
+	totalBytes++;
+}
+
+public synchronized void incrementFiles() {
+	totalFiles++;
+}
+
+```
+
+**c) Using Synchronized Block inside Method:**  
+
+```
+public void incrementTotalBytes() {
+	synchronized (this) {
+		totalBytes++;
+	}
+}
+
+public void incrementTotalBytes() {
+	synchronized (this) {
+		totalFiles++;
+	}
+}
+```
+
+In the above solutions b and c we have two synchronized methods / synchronized blocks with monitoring value as this keyword, in the DownloadStatus class during the update of method incrementTotalBytes, the update for incrementFiles method has to happen but instead the incrementFiles will enter into lock mode. We need to lock a method incrementTotalBytes during the update of this method, at the same time we shouldn't lock incrementFiles method. 
+
+Instead of using this keyword in the synchronized block we can define our own monitoring objects to each methods for avoiding the lock of other methods.
+
+```
+private Object totalBytesLock = new Object();
+private Object totalFilesLock = new Object();
+
+public void incrementTotalBytes() {
+	synchronized (totalBytesLock) {
+		totalBytes++;
+	}
+}
+
+public synchronized void incrementTotalFiles() {
+	synchronized (totalFilesLock) {
+		totalFiles++;
+	}
+}
+
+```
+
+This will solve the lock happening between the two methods incrementTotalBytes & incrementFiles during the increment.
+
+**d) Using volatile keyword:**  
 
