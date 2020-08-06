@@ -1,9 +1,9 @@
 ### Concurrent Systems:  
-**Processes and Threads:**  
+#### Processes and Threads:  
 Process is an instance of a program or an application. Process contains the image of the application code, memory and some other resources. An OS can run multiple process at a same time. This is called concurrency at the process level. Each process have their own memory space. We can also have concurrency within the process by using Threads. 
 Thread is sequence of instructions. Basically our codes are executed by Threads. Each process will have atleast one thread. In Java this one thread is called as main thread. We can create additional threads to run many Tasks concurrently. Applications that are using multiple threads then its called as MultiThreading. A thread cannot exist without process. All threads under a single process can share memory space between them. Threads can communicate with other threads of the same process.  
 
-**Runnable Interface: (FunctionalInterface)**  
+#### Runnable Interface:(FunctionalInterface)  
 It represents a task to be run under a thread. It has one method run(), this method has no return type as well as no parameter.
 
 We are creating a task called DownloadFilesTask which implements Runnable Interface.
@@ -23,7 +23,7 @@ public class DownloadFilesTask implements Runnable {
 }
 ```
 
-**Thread Start:**    
+#### Thread Start:  
 Thread class have start() method. Thread class will accept the implementation of Runnable interface as a constructor parameter(i.e DownloadFilesTask).
 
 ```
@@ -72,7 +72,7 @@ public void run() {
 }
 ```
 
-**Concurrency Issues:**  
+#### Concurrency Issues:  
 If multiple threads access the same object and while changing that common object state we will run into below problems.  
 **1) Race Condition:**  
 Multiple threads try to modify the same data at same time.This will cause data inconsistent.  
@@ -101,7 +101,7 @@ private static void raceConditionSimulation() {
 }
 ```
 
-**Atomic Operations:**  (compare-and-swap)
+#### Atomic Operations: (compare-and-swap)  
 Atomic operations are take place in one step. Like read and write operation of variable. Atomic operations cannot be interrupted and they are thread safe. An operation acting on shared memory is atomic if it completes in a single step relative to other threads.
 
 **For example:**  
@@ -118,7 +118,7 @@ totalBytes++;
 */
 ```
 
-**Lock:**  
+#### Lock:  
 Every object in Java has a single lock (also called monitor) associated with it. When a thread enters a synchronized method or synchronized block it acquires that lock. All other threads attempting to execute the same code (in synchronized method or synchronized block) have to wait for the first thread to finish and release the lock.
 
 **Strategies for Thread Safety:**  
@@ -128,10 +128,10 @@ Every object in Java has a single lock (also called monitor) associated with it.
 4) Atomic Objects => We can use Atomic Classes in Java, which is Thread safe. If we increment an Atomic integer, JVM will execute the increment in one single operation.
 5) Partitioning => Multiple threads can access collection objects but only one thread can access the segment of Collection.
 
-**1) Confinement:**  
+#### 1) Confinement:  
 Creating individual Task object for every thread and combining them once all the threads are finished. Refer ThreadDemoConfinement class.
 
-**2) Synchronization:**  
+#### 2) Synchronization:  
 **a) Using Lock Interface:**  
 We can use any Lock implementation in the DownloadStatus class and add lock before the increment totalBytes and unlock after increment.
 
@@ -235,7 +235,7 @@ private volatile boolean isDone; //adding this volatile keyword to the isDone so
 ```
 
 **Thread Signaling or Communication:**  
-To communicate effectively between threads we have the below methods in all the objects. 
+To communicate effectively between threads we have the below methods in all the objects.   
 **1) wait()**  
 It tells the current thread (thread which is executing code inside a synchronized method or block) to give up monitor (lock). Object's lock is acquired by a thread only when it is executing in a synchronized context. So it makes sense to use wait() method, which asks thread to release the lock, only in synchronized context.
   
@@ -291,3 +291,24 @@ In the first code block we are adding wait() method inside the while loop, so th
 
 In the second code block, once the file is downloaded and status modified we are notify to other threads which depends on this value. Now the thread2 will start to run and proceed for the execution.
 
+#### 3) Atomic Objects:  
+We can use java.util.concurrent.atomic package objects to avoid the race conditions. These objects are thread safe and are executed in a single step. Atomic operations are using compare and swap logic to attain the result. It will compare current value with new value and if both are not equal it will swap the new value to current value. Atomic operations are supported natively by most CPU. For counter variables in threads we can use Atomic objects, these objects are thread safe and faster.
+
+We can replace the totalBytes in the DownloadStatus class from int to AtomicInteger to avoid the race conditions. 
+
+```
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class DownloadStatus {
+    
+	private AtomicInteger totalBytes = new AtomicInteger();
+ 
+	public int getTotalBytes() {
+        return totalBytes.get();
+    }
+    
+	public void incrementTotalBytes() {
+        totalBytes.incrementAndGet();
+    }
+}
+```
