@@ -318,7 +318,7 @@ public class DownloadStatus {
 **b) Adder Operation:**  
 In the thread application if we are frequently update the counter object we can use the Adder classes in the same java.util.concurrent.atomic packages. Internally the LongAdder objects keeps array of counters that grow on demand. Our counters are stored in a array cells. So different thread are modified this counter class concurrently without any issues. Adder classes are faster than Atomic classes.
 
-
+We are calling the totalBytes.intValue() in the DownloadStatus class, which internally calls the sum() method to calculate the total value. 
 
 ```
 import java.util.concurrent.atomic.LongAdder;
@@ -337,3 +337,4 @@ public class DownloadStatus {
 }
 
 ```
+
