@@ -1,4 +1,4 @@
-package com.codeconfessions.racecondition;
+package com.codeconfessions.concurrency.racecondition;
 
 public class DownloadFilesTask implements Runnable {
 

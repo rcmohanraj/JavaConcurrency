@@ -1,4 +1,4 @@
-package com.codeconfessions.signalling;
+package com.codeconfessions.concurrency.signalling;
 
 public class DownloadFilesTask implements Runnable {
 

@@ -1,4 +1,4 @@
-package com.codeconfessions.visibilityproblem;
+package com.codeconfessions.concurrency.visibilityproblem;
 
 public class DownloadStatus {
 
