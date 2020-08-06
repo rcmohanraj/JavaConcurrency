@@ -338,3 +338,20 @@ public class DownloadStatus {
 
 ```
 
+#### Synchronized Collections:  
+We can use synchronized collections object in the java.util pacakge while will avoid the race condition while modifying the same collection object from multiple threads. Synchronized collections are using locks to achieve the thread safety.
+
+```
+Collection<Integer> collection = Collections.synchronizedCollection(new ArrayList<>());
+```
+
+#### Concurrent Collections:  
+These collections use partitioning approach where it will divide the data into segments and different threads can concurrently work with the different segments. But only one thread at a time can access a given segment. Its faster than Synchronized Collections because its not using synchronization and locks. 
+
+We also have SynchronizedMap and Hashtable and both are thread safe but only one thread can access the object at a time. But ConcurrentHashMap allows multiple threads to access.
+
+```
+Map<Integer, String> map = new ConcurrentHashMap<>();
+```
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

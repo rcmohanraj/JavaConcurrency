@@ -1,4 +1,4 @@
-package com.codeconfessions.synchronization;
+package com.codeconfessions.concurrency.synchronization;
 
 public class DownloadStatus {
 

@@ -1,4 +1,4 @@
-package com.codeconfessions.adderoperation;
+package com.codeconfessions.concurrency.adderoperation;
 
 import java.util.concurrent.atomic.LongAdder;
 

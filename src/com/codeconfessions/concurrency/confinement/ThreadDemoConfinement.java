@@ -1,4 +1,4 @@
-package com.codeconfessions.confinement;
+package com.codeconfessions.concurrency.confinement;
 
 import java.util.ArrayList;
 import java.util.List;

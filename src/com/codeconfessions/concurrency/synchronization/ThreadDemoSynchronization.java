@@ -1,16 +1,19 @@
-package com.codeconfessions.adderoperation;
+package com.codeconfessions.concurrency.synchronization;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreadDemoAdderOperation {
+public class ThreadDemoSynchronization {
 
     public static void main(String[] args) {
-        adderOperation();
+        synchronizationDemo();
     }
 
-    //Simulating Adder Operation using java.util.concurrent.atomic package
-    private static void adderOperation() {
+    private static void synchronizationDemo() {
+        LocalDateTime start = LocalDateTime.now();
+        System.out.println(start);
         DownloadStatus status = new DownloadStatus();
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -25,6 +28,8 @@ public class ThreadDemoAdderOperation {
                 e.printStackTrace();
             }
         }
+        System.out.println(Duration.between(start, LocalDateTime.now()).toMillis());
         System.out.println("Total Bytes Downloaded:"+status.getTotalBytes());
+        System.out.println("Total Files Downloaded:"+status.getTotalFiles());
     }
 }

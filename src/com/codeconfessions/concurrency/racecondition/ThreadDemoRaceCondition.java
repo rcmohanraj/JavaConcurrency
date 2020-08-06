@@ -1,16 +1,16 @@
-package com.codeconfessions.atomicoperation;
+package com.codeconfessions.concurrency.racecondition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreadDemoAtomicOperation {
+public class ThreadDemoRaceCondition {
 
     public static void main(String[] args) {
-        atomicOperation();
+        raceConditionSimulation();
     }
 
-    //Simulating Atomic Operation using java.util.concurrent.atomic package
-    private static void atomicOperation() {
+    //Simulating Race Condition
+    private static void raceConditionSimulation() {
         DownloadStatus status = new DownloadStatus();
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

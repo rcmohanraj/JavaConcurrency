@@ -1,16 +1,16 @@
-package com.codeconfessions.racecondition;
+package com.codeconfessions.concurrency.adderoperation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreadDemoRaceCondition {
+public class ThreadDemoAdderOperation {
 
     public static void main(String[] args) {
-        raceConditionSimulation();
+        adderOperation();
     }
 
-    //Simulating Race Condition
-    private static void raceConditionSimulation() {
+    //Simulating Adder Operation using java.util.concurrent.atomic package
+    private static void adderOperation() {
         DownloadStatus status = new DownloadStatus();
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

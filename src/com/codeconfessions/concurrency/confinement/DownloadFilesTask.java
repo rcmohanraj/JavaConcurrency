@@ -1,11 +1,11 @@
-package com.codeconfessions.atomicoperation;
+package com.codeconfessions.concurrency.confinement;
 
 public class DownloadFilesTask implements Runnable {
 
     private DownloadStatus status;
 
-    public DownloadFilesTask(DownloadStatus status) {
-        this.status = status;
+    public DownloadFilesTask() {
+        this.status = new DownloadStatus();
     }
 
     @Override
@@ -15,5 +15,9 @@ public class DownloadFilesTask implements Runnable {
             status.incrementTotalBytes();
         }
         System.out.println("Download completed:"+Thread.currentThread().getName());
+    }
+
+    public DownloadStatus getStatus() {
+        return status;
     }
 }

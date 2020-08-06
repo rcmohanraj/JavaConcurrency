@@ -1,4 +1,4 @@
-package com.codeconfessions.atomicoperation;
+package com.codeconfessions.concurrency.atomicoperation;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

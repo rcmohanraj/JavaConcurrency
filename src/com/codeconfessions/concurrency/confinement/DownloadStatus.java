@@ -1,4 +1,4 @@
-package com.codeconfessions.racecondition;
+package com.codeconfessions.concurrency.confinement;
 
 public class DownloadStatus {
 
