@@ -291,7 +291,9 @@ In the first code block we are adding wait() method inside the while loop, so th
 
 In the second code block, once the file is downloaded and status modified we are notify to other threads which depends on this value. Now the thread2 will start to run and proceed for the execution.
 
-#### 3) Atomic Objects:  
+#### 3) Atomic Operations:  
+
+**a) Atomic Objects:**  
 We can use java.util.concurrent.atomic package objects to avoid the race conditions. These objects are thread safe and are executed in a single step. Atomic operations are using compare and swap logic to attain the result. It will compare current value with new value and if both are not equal it will swap the new value to current value. Atomic operations are supported natively by most CPU. For counter variables in threads we can use Atomic objects, these objects are thread safe and faster.
 
 We can replace the totalBytes in the DownloadStatus class from int to AtomicInteger to avoid the race conditions. 
@@ -311,4 +313,27 @@ public class DownloadStatus {
         totalBytes.incrementAndGet();
     }
 }
+```
+
+**b) Adder Operation:**  
+In the thread application if we are frequently update the counter object we can use the Adder classes in the same java.util.concurrent.atomic packages. Internally the LongAdder objects keeps array of counters that grow on demand. Our counters are stored in a array cells. So different thread are modified this counter class concurrently without any issues. Adder classes are faster than Atomic classes.
+
+
+
+```
+import java.util.concurrent.atomic.LongAdder;
+
+public class DownloadStatus {
+
+    private LongAdder totalBytes = new LongAdder();
+
+    public int getTotalBytes() {
+        return totalBytes.intValue();
+    }
+
+    public void incrementTotalBytes() {
+        totalBytes.increment();
+    }
+}
+
 ```
