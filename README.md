@@ -200,4 +200,34 @@ public synchronized void incrementTotalFiles() {
 This will solve the lock happening between the two methods incrementTotalBytes & incrementFiles during the increment.
 
 **d) Using volatile keyword:**  
+Th use of volatile keyword will not solve the Race Condition but instead it will solve the visibility problem. The variable which marked with volatile keyword will not be referred from the CPU cache. So every time threads will refer the memory to fetch the value.
+
+```
+DownloadStatus.java
+private boolean isDone;
+```
+
+```
+ThreadDemoVisibilityProblem.java
+
+private static void visibilityProblem() {
+	DownloadStatus status = new DownloadStatus();
+	Thread thread1 = new Thread(new DownloadFilesTask(status));
+	Thread thread2 = new Thread(
+			() -> {
+				while(!status.isDone()) {}
+				System.out.println("Total Bytes Downloaded:"+status.getTotalBytes());
+			}
+	);
+	thread1.start();
+	thread2.start();
+}
+```
+
+In the above code thread1 changed the boolean to true once its finished the job and updated back to the memory. But thread2 will go into the infinite while loop because the isDone will be referred as false(stored in the cpu2 cache first time). To solve this we need to add the volatile keyword to the done variable which means this variable is not stable. So the JVM will fetch values from the memory to get the value instead of cache.
+
+```
+DownloadStatus.java
+private volatile boolean isDone; //adding this volatile keyword to the isDone solved the visibility problem
+```
 
