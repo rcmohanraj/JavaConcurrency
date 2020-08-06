@@ -101,7 +101,6 @@ private static void raceConditionSimulation() {
 }
 ```
 
-
 **Atomic Operations:**  (compare-and-swap)
 Atomic operations are take place in one step. Like read and write operation of variable. Atomic operations cannot be interrupted and they are thread safe. An operation acting on shared memory is atomic if it completes in a single step relative to other threads.
 
@@ -118,6 +117,10 @@ totalBytes++;
    3. After increment CPU will update this new value into the memory.
 */
 ```
+
+**Lock:**  
+Every object in Java has a single lock (also called monitor) associated with it. When a thread enters a synchronized method or synchronized block it acquires that lock. All other threads attempting to execute the same code (in synchronized method or synchronized block) have to wait for the first thread to finish and release the lock.
+
 **Strategies for Thread Safety:**  
 1) Confinement or Restriction => Instead of sharing common object across threads, we can create object for each thread and we can combine the results once all the threads are completed.  
 2) Immutability => If the state/data of the object is not changed once its created. Sharing immutable objects between threads are fine. Because these objects are read by the threads.  
@@ -230,4 +233,61 @@ In the above code thread1 changed the boolean to true once its finished the job 
 DownloadStatus.java
 private volatile boolean isDone; //adding this volatile keyword to the isDone solved the visibility problem
 ```
+
+**Thread Signaling or Communication:**  
+To communicate effectively between threads we have the below methods in all the objects. 
+**1) wait()**  
+It tells the current thread (thread which is executing code inside a synchronized method or block) to give up monitor (lock). Object's lock is acquired by a thread only when it is executing in a synchronized context. So it makes sense to use wait() method, which asks thread to release the lock, only in synchronized context.
+  
+**2) notify() or notifyAll()**  
+Single thread (in case of notify) or all of the threads (in case of notifyAll), waiting for the object's lock change state to runnable and contend for the object's lock, and the thread that gets the lock starts execution. Here again, notify() and notifyAll() methods can inform other threads, that the object's lock can be acquired now, only if these methods are called from the synchronized context.  
+
+In the above volatile solution, the while loop is keep on checking the isDone flag to ensure the file is download status in changed. The while loop will go into infinite cycle and cause the high CPU utilization unnecessarily. To solve this we can use the above methods to communicate between thread1 and thread2.  
+
+```
+ThreadDemoSignaling.java
+
+//Simulating Thread Siganaling
+private static void threadSignaling() {
+	DownloadStatus status = new DownloadStatus();
+	Thread thread1 = new Thread(new DownloadFilesTask(status));
+	Thread thread2 = new Thread(
+			() -> {
+				while(!status.isDone()) {
+					System.out.println("Waiting for file download to be done:"+ status.isDone());
+					synchronized (status) {
+						try {
+							status.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				System.out.println("Total Bytes Downloaded:"+status.getTotalBytes());
+			}
+	);
+	thread1.start();
+	thread2.start();
+}
+```
+
+```
+DownloadFilesTask.java 
+
+public void run() {
+	System.out.println(Thread.activeCount());
+	for(int i = 0; i < 1_000_000; i++) {
+		status.incrementTotalBytes();
+	}
+	status.done();
+	synchronized (status) {
+		status.notify();
+	}
+	System.out.println("Download completed:"+Thread.currentThread().getName());
+}
+```
+
+In the first code block we are adding wait() method inside the while loop, so that it will not run multiple times. For this first loop the status is false and status object will go into wait mode. It will wait until the signal arrives from other thread. As per Java we need to wrap this with wait and notify methods synchronized block.
+
+In the second code block, once the file is downloaded and status modified we are notify to other threads which depends on this value. Now the thread2 will start to run and proceed for the execution.
 
